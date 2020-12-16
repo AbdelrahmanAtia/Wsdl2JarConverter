@@ -17,13 +17,21 @@ import org.javaworld.w2j.util.PropertiesUtil;
  *
  *issues >> 
  * 
- * 1-  create properties file if not exist inside add property method
+ * 1-  handle case when wsdl file path field is empty or invalid in both gui and generator class
  * 2-  improve add property by allowing adding multiple key & value
  *     pairs in one shot
  *        
- * 2-  make file util class that uses nio library instead of cmd commands
- * 3-  show logs in a text area
- * 4-  find a better way for button shape during generation
+ * 3-  make file util class that uses nio library instead of cmd commands
+ * 4-  show logs in a text area
+ * 5-  find a better way for button shape during generation
+ * 6-  add field validation to GUI.
+ * 
+ * 
+ * Done
+ * =====
+ * 	>> create properties file if not exist inside add property method
+ *  >> 
+ * 
  */
 
 
@@ -107,13 +115,18 @@ public class Main {
 			String apacheCxfBinPath = apacheCxfBinPathField.getText();
 			String wsdlPath = wsdlPathField.getText();
 			
-			//save bin paths in properties file
-			PropertiesUtil.addProperty("java.bin.path", javaBinPath);
-			PropertiesUtil.addProperty("apache.cxf.bin.path", apacheCxfBinPath);
+			
 			
 			Generator generator = new Generator(wsdlPath, javaBinPath, apacheCxfBinPath);
 			try {
+				
+				// generate jar at wsdl path
 				generator.generate();
+				
+				//save bin paths in properties file
+				PropertiesUtil.addProperty("java.bin.path", javaBinPath);
+				PropertiesUtil.addProperty("apache.cxf.bin.path", apacheCxfBinPath);
+				
 			} catch (IOException | InterruptedException e1) {
 				e1.printStackTrace();
 			}

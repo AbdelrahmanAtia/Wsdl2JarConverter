@@ -48,8 +48,8 @@ public class Generator {
 		}
 	}
 		
-	private  void generateClient(String wsdlPath, String targetPath) throws IOException, InterruptedException {
-
+	private  void generateClient(String wsdlPath, String targetPath) throws IOException, InterruptedException {		
+		
 		String generateClientCommand = apacheCxfBinPath + "\\wsdl2java" 
 								+ " -classdir " + targetPath 
 								+ " -d "        + targetPath 
