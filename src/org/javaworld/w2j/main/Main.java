@@ -8,6 +8,25 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import org.javaworld.w2j.util.PropertiesUtil;
+
+
+/**
+ * 
+ * @author O-AbdelRahman.Attya
+ *
+ *issues >> 
+ * 
+ * 1-  create properties file if not exist inside add property method
+ * 2-  improve add property by allowing adding multiple key & value
+ *     pairs in one shot
+ *        
+ * 2-  make file util class that uses nio library instead of cmd commands
+ * 3-  show logs in a text area
+ * 4-  find a better way for button shape during generation
+ */
+
+
 public class Main {
 
 	private JFrame frame;
@@ -54,6 +73,7 @@ public class Main {
 		frame.getContentPane().add(javaBinPathField);
 		javaBinPathField.setColumns(10);
 		
+		
 		JLabel lblNewLabel = new JLabel("Java Bin Path:");
 		lblNewLabel.setBounds(26, 34, 121, 20);
 		frame.getContentPane().add(lblNewLabel);
@@ -76,12 +96,20 @@ public class Main {
 		lblNewLabel_2.setBounds(26, 129, 121, 23);
 		frame.getContentPane().add(lblNewLabel_2);
 		
+		//initialize text fields
+		javaBinPathField.setText(PropertiesUtil.getProperty("java.bin.path"));
+		apacheCxfBinPathField.setText(PropertiesUtil.getProperty("apache.cxf.bin.path"));
+				
 		JButton btnNewButton = new JButton("Generate");
-		
 		btnNewButton.addActionListener(e -> {
+			
 			String javaBinPath = javaBinPathField.getText();
 			String apacheCxfBinPath = apacheCxfBinPathField.getText();
 			String wsdlPath = wsdlPathField.getText();
+			
+			//save bin paths in properties file
+			PropertiesUtil.addProperty("java.bin.path", javaBinPath);
+			PropertiesUtil.addProperty("apache.cxf.bin.path", apacheCxfBinPath);
 			
 			Generator generator = new Generator(wsdlPath, javaBinPath, apacheCxfBinPath);
 			try {

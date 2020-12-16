@@ -5,26 +5,7 @@ import org.javaworld.w2j.util.CommandLineRunner;
 import org.javaworld.w2j.util.FileUtil;
 
 
-/**
- * 
- * @author O-AbdelRahman.Attya
- *
- *issues >> 
- * 1- save data java & apache bin paths to properties file then 
- *    init corresponding fields each time app is opened
- *    
- * 2-  make file util class that uses nio library instead of cmd commands
- * 3-  show logs in a text area
- * 4-  find a better way for button shape during generation
- */
-
-
 public class Generator {
-	
-	//public static String wsdlPath = "C:\\Users\\o-abdelrahman.attya\\Desktop\\test\\ERPServiceRequestManagementHTTP.wsdl";
-	//public static final String JAVA_BIN_PATH = "C:\\Program Files\\Java\\jdk1.8.0_251\\bin";
-	//public static final String APACHE_CFX_BIN_PATH = "C:\\_apache-cxf-3.2.1\\bin";
-
 	
 	private String wsdlPath;
 	private String javaBinPath;
