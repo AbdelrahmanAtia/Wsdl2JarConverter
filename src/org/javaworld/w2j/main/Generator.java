@@ -1,6 +1,5 @@
 package org.javaworld.w2j.main;
 
-import java.io.IOException;
 import org.javaworld.w2j.util.CommandLineRunner;
 import org.javaworld.w2j.util.FileUtil;
 
@@ -17,7 +16,7 @@ public class Generator {
 		this.apacheCxfBinPath = apacheCxfBinPath;
 	}
 	
-	public void generate() throws IOException, InterruptedException {
+	public void generate() {
 		
 		//delete temp folder if exist	
 		String tempFolderPath = System.getProperty("user.home") + "\\Documents\\temp";
@@ -38,7 +37,7 @@ public class Generator {
 
 	}
 	
-	private void generateJar(String jarFilePath, String targetPath) throws IOException, InterruptedException {
+	private void generateJar(String jarFilePath, String targetPath)  {
 		String jarPkgCmd = "\"" + javaBinPath + "\\jar\" cvf " + jarFilePath + " -C " + targetPath + " .";
 		int result = CommandLineRunner.runCommand(jarPkgCmd);
 		if(result == 0) {
@@ -48,7 +47,7 @@ public class Generator {
 		}
 	}
 		
-	private  void generateClient(String wsdlPath, String targetPath) throws IOException, InterruptedException {		
+	private  void generateClient(String wsdlPath, String targetPath)  {		
 		
 		String generateClientCommand = apacheCxfBinPath + "\\wsdl2java" 
 								+ " -classdir " + targetPath 
