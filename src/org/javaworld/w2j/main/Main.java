@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import org.javaworld.w2j.model.Library;
 import org.javaworld.w2j.util.FileUtil;
 import org.javaworld.w2j.util.PropertiesUtil;
 import javax.swing.JTextPane;
@@ -28,17 +29,12 @@ import java.awt.Toolkit;
  * 1-  make properties util use Fileutil.isExist() in static initializer
  * 2-  improve add property by allowing adding multiple key & value
  *     pairs in one shot
- *        
  * 3-  make file util class that uses nio library instead of cmd commands
  * 4-  show logs in a text area
- * 5-  find a better way for button shape during generation
- * 6-  allow generating jars with different libraries:-
- *     apache cxf & wsimport   use a check box to specify the library
- * 
+ * 5-  find a better way for button shape during generation * 
  * 7-  change project name to w2j
  * 8-  find a better way for handling input validation by using setInputVerifier()
  *     method of the text field
- *  
  * 9-  create a log file for the project.
  * 
  * 
@@ -47,6 +43,8 @@ import java.awt.Toolkit;
  * 	>> create properties file if not exist inside add property method
  *  >> handle case when wsdl file path field is empty or invalid in both gui and generator class
  *  >> add field validation to GUI.
+ *  >> allow generating jars with different libraries:-
+ *     apache cxf & wsimport   use a check box to specify the library
  */
 
 
@@ -58,6 +56,7 @@ public class Main {
 	private JTextField wsdlPathField;
 	private JLabel lblNewLabel_2;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private String library = Library.APACHE_CXF.toString();
 
 	/**
 	 * Launch the application.
@@ -157,7 +156,7 @@ public class Main {
 				return;
 			}
 			
-			Generator generator = new Generator(wsdlPath, javaBinPath, apacheCxfBinPath);
+			Generator generator = new Generator(wsdlPath, javaBinPath, apacheCxfBinPath, library);
 			// generate jar at WSDL path
 			generator.generate();
 			
@@ -173,6 +172,7 @@ public class Main {
 		JRadioButton rdbtnNewRadioButton_1_1 = new JRadioButton("Apache CXF");
 		rdbtnNewRadioButton_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				library = Library.APACHE_CXF.toString();
 				apacheCxfBinPathField.setVisible(true);
 				apacheCxfFieldLabel.setVisible(true);
 			}
@@ -186,6 +186,7 @@ public class Main {
 		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("wsimport");
 		rdbtnNewRadioButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				library = Library.WSIMPORT.toString();
 				apacheCxfBinPathField.setVisible(false);
 				apacheCxfFieldLabel.setVisible(false);
 			}

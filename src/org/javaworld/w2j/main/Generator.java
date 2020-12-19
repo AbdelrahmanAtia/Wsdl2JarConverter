@@ -1,5 +1,6 @@
 package org.javaworld.w2j.main;
 
+import org.javaworld.w2j.model.Library;
 import org.javaworld.w2j.util.CommandLineRunner;
 import org.javaworld.w2j.util.FileUtil;
 
@@ -9,13 +10,15 @@ public class Generator {
 	private String wsdlPath;
 	private String javaBinPath;
 	private String apacheCxfBinPath;
-
-	public Generator(String wsdlPath, String javaBinPath, String apacheCxfBinPath) {
+	private String library;
+	
+	public Generator(String wsdlPath, String javaBinPath, String apacheCxfBinPath, String library) {
 		this.wsdlPath = wsdlPath;
 		this.javaBinPath = javaBinPath;
 		this.apacheCxfBinPath = apacheCxfBinPath;
+		this.library = library;
 	}
-	
+
 	public void generate() {
 		
 		//delete temp folder if exist	
@@ -26,7 +29,7 @@ public class Generator {
 		FileUtil.createFolder(tempFolderPath);		
 		
 		// generate the client into the temp folder
-		generateClient(wsdlPath, tempFolderPath);
+		generateClient(tempFolderPath);
 		
 		//copy wsdl file to temp folder
 		FileUtil.copyFile(wsdlPath, tempFolderPath);
@@ -47,14 +50,27 @@ public class Generator {
 		}
 	}
 		
-	private  void generateClient(String wsdlPath, String targetPath)  {		
+	private  void generateClient(String targetPath)  {
 		
-		String generateClientCommand = apacheCxfBinPath + "\\wsdl2java" 
-								+ " -classdir " + targetPath 
-								+ " -d "        + targetPath 
-								+ " -compile " 
-								+ wsdlPath;
+		
+		String generateClientCommand = null;
+		
+		if(library.equals(Library.APACHE_CXF.toString())) {
+			generateClientCommand = apacheCxfBinPath + "\\wsdl2java" 
+										+ " -classdir " + targetPath 
+										+ " -d "        + targetPath 
+										+ " -compile " 
+										+ wsdlPath;
+		} else if(library.equals(Library.WSIMPORT.toString())) {
+			generateClientCommand = "\"" + javaBinPath + " \\wsimport" + "\""
+					                     + " -keep -verbose " + wsdlPath
+					                     + " -d " + targetPath;
+		} else {
+			throw new RuntimeException("not supported library");
+		}
+		
 		int result = CommandLineRunner.runCommand(generateClientCommand);
+		
 		if(result == 0) {
 			System.out.println("client generated successfully \n");
 		} else {
