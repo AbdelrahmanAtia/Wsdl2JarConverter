@@ -1,5 +1,6 @@
 package org.javaworld.w2j.main;
 
+import org.javaworld.w2j.logging.AppLogger;
 import org.javaworld.w2j.model.Library;
 import org.javaworld.w2j.util.CommandLineRunner;
 import org.javaworld.w2j.util.FileUtil;
@@ -7,6 +8,8 @@ import org.javaworld.w2j.util.FileUtil;
 
 public class Generator {
 	
+	private static final AppLogger logger = AppLogger.getLogger();
+
 	private String wsdlPath;
 	private String javaBinPath;
 	private String apacheCxfBinPath;
@@ -44,7 +47,7 @@ public class Generator {
 		String jarPkgCmd = "\"" + javaBinPath + "\\jar\" cvf " + jarFilePath + " -C " + targetPath + " .";
 		int result = CommandLineRunner.runCommand(jarPkgCmd);
 		if(result == 0) {
-			System.out.println("jar generated successfully \n");
+			logger.info("jar generated successfully");
 		} else {
 			throw new RuntimeException("failed to generate the jar");
 		}
@@ -72,7 +75,7 @@ public class Generator {
 		int result = CommandLineRunner.runCommand(generateClientCommand);
 		
 		if(result == 0) {
-			System.out.println("client generated successfully \n");
+			logger.info("client generated successfully \n");
 		} else {
 			throw new RuntimeException("failed to generate the client");
 		}

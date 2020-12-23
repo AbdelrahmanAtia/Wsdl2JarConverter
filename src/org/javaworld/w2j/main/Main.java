@@ -13,11 +13,15 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import org.javaworld.w2j.logging.AppLogger;
+import org.javaworld.w2j.logging.TextAreaHandler;
 import org.javaworld.w2j.model.Library;
 import org.javaworld.w2j.util.FileUtil;
 import org.javaworld.w2j.util.PropertiesUtil;
-import javax.swing.JTextPane;
-import java.awt.Toolkit;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
+import java.awt.Color;
+import javax.swing.JScrollPane;
 
 
 /**
@@ -26,6 +30,8 @@ import java.awt.Toolkit;
  *
  *issues >> 
  * 
+ * 0-  use java default logger for logging
+ * 1-  create logger properties file
  * 1-  make properties util use Fileutil.isExist() in static initializer
  * 2-  improve add property by allowing adding multiple key & value
  *     pairs in one shot
@@ -47,9 +53,10 @@ import java.awt.Toolkit;
  *     apache cxf & wsimport   use a check box to specify the library
  */
 
-
 public class Main {
-
+	
+	private static final AppLogger logger = AppLogger.getLogger();
+	
 	private JFrame frame;
 	private JTextField javaBinPathField;
 	private JTextField apacheCxfBinPathField;
@@ -61,7 +68,7 @@ public class Main {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -72,6 +79,7 @@ public class Main {
 				}
 			}
 		});
+		
 	}
 
 	/**
@@ -88,7 +96,8 @@ public class Main {
 		
 		//create the frame
 		frame = new JFrame();
-		frame.setBounds(100, 100, 565, 311);
+		frame.getContentPane().setForeground(Color.WHITE);
+		frame.setBounds(100, 100, 516, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -106,31 +115,31 @@ public class Main {
 						
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(26, 126, 461, 135);
+		panel.setBounds(26, 114, 461, 120);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
-		
-		JLabel apacheCxfFieldLabel = new JLabel("Apache Cxf Bin Path:");
-		apacheCxfFieldLabel.setBounds(0, 0, 121, 23);
-		panel.add(apacheCxfFieldLabel);
 		
 		apacheCxfBinPathField = new JTextField();
 		apacheCxfBinPathField.setBounds(141, 0, 320, 22);
 		panel.add(apacheCxfBinPathField);
 		apacheCxfBinPathField.setColumns(10);
 		
+		JLabel apacheCxfFieldLabel = new JLabel("Apache Cxf Bin Path:");
+		apacheCxfFieldLabel.setBounds(0, 0, 121, 23);
+		panel.add(apacheCxfFieldLabel);
+		
+		lblNewLabel_2 = new JLabel("Wsdl Path:");
+		lblNewLabel_2.setBounds(0, 34, 121, 23);
+		panel.add(lblNewLabel_2);
+		
 		
 		wsdlPathField = new JTextField();
-		wsdlPathField.setBounds(141, 50, 320, 22);
+		wsdlPathField.setBounds(141, 37, 320, 22);
 		panel.add(wsdlPathField);
 		wsdlPathField.setColumns(10);
 		
-		lblNewLabel_2 = new JLabel("Wsdl Path:");
-		lblNewLabel_2.setBounds(0, 49, 121, 23);
-		panel.add(lblNewLabel_2);
-		
-		JButton btnNewButton = new JButton("Generate");		
-		btnNewButton.setBounds(372, 99, 89, 36);
+		JButton btnNewButton = new JButton("Generate");
+		btnNewButton.setBounds(372, 82, 89, 36);
 		panel.add(btnNewButton);
 		btnNewButton.addActionListener(e -> {
 			
@@ -156,15 +165,27 @@ public class Main {
 				return;
 			}
 			
-			Generator generator = new Generator(wsdlPath, javaBinPath, apacheCxfBinPath, library);
 			// generate jar at WSDL path
-			generator.generate();
+			Thread t = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					
+					btnNewButton.setEnabled(false);
+					
+					Generator generator = new Generator(wsdlPath, javaBinPath, apacheCxfBinPath, library);
+					generator.generate();
+					
+					//save bin paths in properties file
+					PropertiesUtil.addProperty("java.bin.path", javaBinPath);
+					PropertiesUtil.addProperty("apache.cxf.bin.path", apacheCxfBinPath);
+					
+					JOptionPane.showMessageDialog(null, "Jar Generated Successfully");
+					
+					btnNewButton.setEnabled(true);
+				}
+			});
 			
-			//save bin paths in properties file
-			PropertiesUtil.addProperty("java.bin.path", javaBinPath);
-			PropertiesUtil.addProperty("apache.cxf.bin.path", apacheCxfBinPath);
-			
-			JOptionPane.showMessageDialog(null, "Jar Generated Successfully");
+			t.start();		
 			
 		});
 		
@@ -200,10 +221,26 @@ public class Main {
 		lblNewLabel_3.setBounds(26, 78, 46, 14);
 		frame.getContentPane().add(lblNewLabel_3);
 		
+		//separator
+		JSeparator separator = new JSeparator();
+		separator.setBounds(26, 245, 461, 2);
+		frame.getContentPane().add(separator);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(26, 258, 461, 250);
+		frame.getContentPane().add(scrollPane);
+		
+		//text area used for logging
+		TextAreaHandler textAreaHandler = logger.getTextAreaHandlers();
+		JTextArea textArea = textAreaHandler.getTextArea();
+		//JTextArea textArea = new JTextArea();
+		scrollPane.setViewportView(textArea);
+		textArea.setForeground(Color.black);
+		textArea.setBackground(Color.white);
+		
 		//initialize text fields
 		javaBinPathField.setText(PropertiesUtil.getProperty("java.bin.path"));
-		apacheCxfBinPathField.setText(PropertiesUtil.getProperty("apache.cxf.bin.path"));
-		
+		apacheCxfBinPathField.setText(PropertiesUtil.getProperty("apache.cxf.bin.path"));		
 		
 	}
 }

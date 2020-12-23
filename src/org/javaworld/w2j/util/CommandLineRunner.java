@@ -5,11 +5,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.javaworld.w2j.logging.AppLogger;
+
 public class CommandLineRunner {
 
-	
+	private static final AppLogger logger = AppLogger.getLogger();
+
 	public static int runCommand(String command) {
-		System.out.println("executing command: \n\t" + command);
+		
+		logger.info("executing command: \n   " + command);
 		
 		ProcessBuilder processBuilder = new ProcessBuilder();
 		try {
@@ -31,7 +35,7 @@ public class CommandLineRunner {
 	    String line = "";
 	    try {
 			while ((line = reader.readLine()) != null) {
-			    System.out.println("\t" + line);
+			    logger.fine("   " + line);
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
