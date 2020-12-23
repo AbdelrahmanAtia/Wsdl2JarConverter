@@ -30,14 +30,14 @@ import javax.swing.JScrollPane;
  *
  *issues >> 
  * 
- * 0-  use java default logger for logging
- * 1-  create logger properties file
- * 1-  make properties util use Fileutil.isExist() in static initializer
- * 2-  improve add property by allowing adding multiple key & value
+ * 0-  improve logging performance
+ * 1-  allow converting multiple wsdls
+ * 2-  make properties util use Fileutil.isExist() in static initializer
+ * 3-  improve add property by allowing adding multiple key & value
  *     pairs in one shot
- * 3-  make file util class that uses nio library instead of cmd commands
- * 4-  show logs in a text area
- * 5-  find a better way for button shape during generation * 
+ * 4-  make file util class that uses nio library instead of cmd commands
+ * 5-  allow generating dependencies text file
+ * 6-   
  * 7-  change project name to w2j
  * 8-  find a better way for handling input validation by using setInputVerifier()
  *     method of the text field
@@ -51,6 +51,8 @@ import javax.swing.JScrollPane;
  *  >> add field validation to GUI.
  *  >> allow generating jars with different libraries:-
  *     apache cxf & wsimport   use a check box to specify the library
+ *  >> use java default logger for logging
+ *  >> find a better way for button shape during generation
  */
 
 public class Main {
