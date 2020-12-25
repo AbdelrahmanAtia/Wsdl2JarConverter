@@ -30,7 +30,7 @@ import javax.swing.JScrollPane;
  * @author O-AbdelRahman.Attya
  *
  *issues >> 
- * 
+ * -1- handle case when java home not found in os user variables 
  * 0-  improve logging performance
  * 1-  allow converting multiple wsdls
  * 2-  make properties util use Fileutil.isExist() in static initializer
@@ -56,6 +56,8 @@ import javax.swing.JScrollPane;
  *     apache cxf & wsimport   use a check box to specify the library
  *  >> use java default logger for logging
  *  >> find a better way for button shape during generation
+ *  >> make a generic exception handler for all threads
+ *  >> copying a file uses java nio api instead of process builder
  */
 
 public class Main {
