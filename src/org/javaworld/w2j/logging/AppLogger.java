@@ -17,9 +17,13 @@ public class AppLogger {
 	public static AppLogger getLogger() {
 		return new AppLogger();
 	}
+	
+	public void severe(String msg) {
+		logger.severe(msg);
+	}
 
 	public void info(String msg) {
-		logger.info(">> " + msg);
+		logger.info(msg);
 	}
 	
 	public void fine(String msg) {

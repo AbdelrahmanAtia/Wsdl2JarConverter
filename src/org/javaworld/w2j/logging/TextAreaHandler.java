@@ -26,7 +26,7 @@ public class TextAreaHandler extends java.util.logging.Handler {
                         record.getSourceMethodName(), record.getMessage());
                 */
                 
-                out.println(record.getMessage());
+                out.println(record.getLevel() + ":  " + record.getMessage());
                 
                 textArea.setText(text.toString());
             }

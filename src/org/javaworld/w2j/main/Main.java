@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import org.javaworld.w2j.exception.Handler;
 import org.javaworld.w2j.logging.AppLogger;
 import org.javaworld.w2j.logging.TextAreaHandler;
 import org.javaworld.w2j.model.Library;
@@ -35,13 +36,15 @@ import javax.swing.JScrollPane;
  * 2-  make properties util use Fileutil.isExist() in static initializer
  * 3-  improve add property by allowing adding multiple key & value
  *     pairs in one shot
- * 4-  make file util class that uses nio library instead of cmd commands
+ * 4-  make create & delete folder in FileUtil uses nio library instead of cmd commands
  * 5-  allow generating dependencies text file
  * 6-   
  * 7-  change project name to w2j
  * 8-  find a better way for handling input validation by using setInputVerifier()
  *     method of the text field
  * 9-  create a log file for the project.
+ * 10- adjust spacing between logs.
+ * 11- change error logs color to red.
  * 
  * 
  * Done
@@ -88,13 +91,15 @@ public class Main {
 	 * Create the application.
 	 */
 	public Main() {
+		// set exception handler for all threads 
+		Thread.setDefaultUncaughtExceptionHandler(new Handler());
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize() {		
 		
 		//create the frame
 		frame = new JFrame();
@@ -145,24 +150,24 @@ public class Main {
 		panel.add(btnNewButton);
 		btnNewButton.addActionListener(e -> {
 			
-			String javaBinPath = javaBinPathField.getText();
-			String apacheCxfBinPath = apacheCxfBinPathField.getText();
-			String wsdlPath = wsdlPathField.getText();
+			String javaBinPath = javaBinPathField.getText().trim();
+			String apacheCxfBinPath = apacheCxfBinPathField.getText().trim();
+			String wsdlPath = wsdlPathField.getText().trim();
 			
 			// validate java bin path field
-			if (javaBinPath.isEmpty() || javaBinPath.isBlank() || !FileUtil.isExist(javaBinPath + "\\jar.exe")) {
+			if (javaBinPath.isEmpty() || !FileUtil.isExist(javaBinPath + "\\jar.exe")) {
 				JOptionPane.showMessageDialog(null, "java bin path field is invalid");
 				return;
 			}
 			
 			// validate Apache CXF bin path field
-			if (apacheCxfBinPath.isEmpty() || apacheCxfBinPath.isBlank() || !FileUtil.isExist(apacheCxfBinPath + "\\wsdl2java.bat")) {
+			if (apacheCxfBinPath.isEmpty() || !FileUtil.isExist(apacheCxfBinPath + "\\wsdl2java.bat")) {
 				JOptionPane.showMessageDialog(null, "Apache CXF bin path field is invalid");
 				return;
 			}
 			
 			// validate WSDL file path
-			if (wsdlPath.isBlank() || !wsdlPath.toLowerCase().endsWith(".wsdl") || !FileUtil.isExist(wsdlPath)) {
+			if (!wsdlPath.toLowerCase().endsWith(".wsdl") || !FileUtil.isExist(wsdlPath)) {
 				JOptionPane.showMessageDialog(null, "WSDL path field is invalid");
 				return;
 			}
