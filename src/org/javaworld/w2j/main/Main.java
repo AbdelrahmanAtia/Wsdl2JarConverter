@@ -36,7 +36,7 @@ import javax.swing.JScrollPane;
  * 2-  make properties util use Fileutil.isExist() in static initializer
  * 3-  improve add property by allowing adding multiple key & value
  *     pairs in one shot
- * 4-  make create & delete folder in FileUtil uses nio library instead of cmd commands
+ * 4-  make delete folder in FileUtil uses nio library instead of cmd commands
  * 5-  allow generating dependencies text file
  * 6-   
  * 7-  change project name to w2j
@@ -58,6 +58,8 @@ import javax.swing.JScrollPane;
  *  >> find a better way for button shape during generation
  *  >> make a generic exception handler for all threads
  *  >> copying a file uses java nio api instead of process builder
+ *  >> create folder uses NIO instead of process builder
+ *  >> enable generate button if exception occurred in generation thread.
  */
 
 public class Main {
@@ -179,18 +181,22 @@ public class Main {
 				@Override
 				public void run() {
 					
-					btnNewButton.setEnabled(false);
+					try {
 					
-					Generator generator = new Generator(wsdlPath, javaBinPath, apacheCxfBinPath, library);
-					generator.generate();
+						btnNewButton.setEnabled(false);
+						
+						Generator generator = new Generator(wsdlPath, javaBinPath, apacheCxfBinPath, library);
+						generator.generate();
+						
+						//save bin paths in properties file
+						PropertiesUtil.addProperty("java.bin.path", javaBinPath);
+						PropertiesUtil.addProperty("apache.cxf.bin.path", apacheCxfBinPath);
+						
+						JOptionPane.showMessageDialog(null, "Jar Generated Successfully");
 					
-					//save bin paths in properties file
-					PropertiesUtil.addProperty("java.bin.path", javaBinPath);
-					PropertiesUtil.addProperty("apache.cxf.bin.path", apacheCxfBinPath);
-					
-					JOptionPane.showMessageDialog(null, "Jar Generated Successfully");
-					
-					btnNewButton.setEnabled(true);
+					} finally {
+						btnNewButton.setEnabled(true);		
+					}				
 				}
 			});
 			

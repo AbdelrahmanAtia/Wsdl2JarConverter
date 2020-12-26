@@ -26,7 +26,7 @@ public class FileUtil {
 	*/
 	
 	public static void copyFile(String sourceFilePath, String targetDirPath) {
-		logger.info("starting copyFile from " + sourceFilePath + " to " + targetDirPath);
+		logger.info("starting to copy file from   " + sourceFilePath + " to   " + targetDirPath);
 		try {
 			
 			Path source = Paths.get(sourceFilePath);
@@ -47,10 +47,23 @@ public class FileUtil {
 		logger.info("directory deleted");
 	}
 
+	/*
 	public static void createFolder(String tempFolderPath) {
 		String makeDirCmd = "md " + tempFolderPath;
 		CommandLineRunner.runCommand(makeDirCmd);
 		logger.info("directory created successfully");
+	}
+	*/
+	
+	public static void createFolder(String dirPath) {
+		logger.info("starting to create a directory at: " + dirPath);
+		try {
+			Files.createDirectories(Paths.get(dirPath));
+			logger.info("directory created successfully");
+		} catch (IOException e) {
+			logger.severe("erorr: failed to create directory");
+			throw new RuntimeException(e);
+		}
 	}
 	
 	
