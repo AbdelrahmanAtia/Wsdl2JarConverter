@@ -1,6 +1,7 @@
 package org.javaworld.w2j.logging;
 
 import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AppLogger {
@@ -11,6 +12,8 @@ public class AppLogger {
 		if (logger == null) {
 			logger = Logger.getLogger("MyLogger");
 			logger.addHandler(new TextAreaHandler());
+			//logger.setLevel(Level.FINE);
+			logger.setLevel(Level.INFO);
 		}
 	}
 

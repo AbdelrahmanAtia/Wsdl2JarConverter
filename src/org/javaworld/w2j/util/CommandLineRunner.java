@@ -21,7 +21,8 @@ public class CommandLineRunner {
 			                                .start();
 			
 			printResults(process.getInputStream());
-			int exitVal = process.waitFor();	
+			int exitVal = process.waitFor();
+			logger.fine("exitVal: " + exitVal);
 			printResults(process.getErrorStream());
 			return exitVal;
 		} catch (IOException | InterruptedException e) {

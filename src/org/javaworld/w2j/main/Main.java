@@ -30,7 +30,15 @@ import javax.swing.JScrollPane;
  * @author O-AbdelRahman.Attya
  *
  *issues >> 
- * -1- handle case when java home not found in os user variables 
+ *
+ * -5- find a way to add JAVA_HOME variable from java bin path to cmd variables
+ * -4- find a better way instead of process builder for  cmd command and for printing
+ *     result and errors of these commands.
+ * -3- create a drop down list for logging level of log area to change logs appeared
+ *     or create a view for settings.
+ * -2- when JAVA_HOME is not found in OS, it says client generated
+ *     Successfully, while actually it is not generated..and no exception is thrown
+ * -1- 
  * 0-  improve logging performance
  * 1-  allow converting multiple wsdls
  * 2-  make properties util use Fileutil.isExist() in static initializer
@@ -38,14 +46,12 @@ import javax.swing.JScrollPane;
  *     pairs in one shot
  * 4-  make delete folder in FileUtil uses nio library instead of cmd commands
  * 5-  allow generating dependencies text file
- * 6-   
+ * 6-  change error logs color to red.
  * 7-  change project name to w2j
  * 8-  find a better way for handling input validation by using setInputVerifier()
  *     method of the text field
  * 9-  create a log file for the project.
  * 10- adjust spacing between logs.
- * 11- change error logs color to red.
- * 
  * 
  * Done
  * =====
@@ -60,6 +66,7 @@ import javax.swing.JScrollPane;
  *  >> copying a file uses java nio api instead of process builder
  *  >> create folder uses NIO instead of process builder
  *  >> enable generate button if exception occurred in generation thread.
+ *  >> prevent client generation when JAVA_HOME is not defined in OS user variables.
  */
 
 public class Main {
@@ -157,6 +164,15 @@ public class Main {
 			String javaBinPath = javaBinPathField.getText().trim();
 			String apacheCxfBinPath = apacheCxfBinPathField.getText().trim();
 			String wsdlPath = wsdlPathField.getText().trim();
+			String javaHome = System.getenv("JAVA_HOME"); 
+
+			// check if JAVA_HOME is set in user environment variables
+
+			if (javaHome == null) {
+				JOptionPane.showMessageDialog(null, "JAVA_HOME variable is not found in user environment variables",
+						"Message", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			
 			// validate java bin path field
 			if (javaBinPath.isEmpty() || !FileUtil.isExist(javaBinPath + "\\jar.exe")) {
