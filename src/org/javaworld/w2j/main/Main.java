@@ -24,14 +24,14 @@ import javax.swing.JTextArea;
 import java.awt.Color;
 import javax.swing.JScrollPane;
 
-
 /**
  * 
  * @author O-AbdelRahman.Attya
  *
  *issues >> 
  *
- * -5- find a way to add JAVA_HOME variable from java bin path to cmd variables
+ * -5- view a circular ring rotating to indicate that the 
+ *     generation process is still in run
  * -4- find a better way instead of process builder for  cmd command and for printing
  *     result and errors of these commands.
  * -3- create a drop down list for logging level of log area to change logs appeared
@@ -67,6 +67,7 @@ import javax.swing.JScrollPane;
  *  >> create folder uses NIO instead of process builder
  *  >> enable generate button if exception occurred in generation thread.
  *  >> prevent client generation when JAVA_HOME is not defined in OS user variables.
+ *  >> find a way to add JAVA_HOME variable from java bin path to cmd variables
  */
 
 public class Main {
@@ -164,15 +165,6 @@ public class Main {
 			String javaBinPath = javaBinPathField.getText().trim();
 			String apacheCxfBinPath = apacheCxfBinPathField.getText().trim();
 			String wsdlPath = wsdlPathField.getText().trim();
-			String javaHome = System.getenv("JAVA_HOME"); 
-
-			// check if JAVA_HOME is set in user environment variables
-
-			if (javaHome == null) {
-				JOptionPane.showMessageDialog(null, "JAVA_HOME variable is not found in user environment variables",
-						"Message", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
 			
 			// validate java bin path field
 			if (javaBinPath.isEmpty() || !FileUtil.isExist(javaBinPath + "\\jar.exe")) {

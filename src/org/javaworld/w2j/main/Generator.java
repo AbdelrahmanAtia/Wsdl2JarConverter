@@ -1,5 +1,8 @@
 package org.javaworld.w2j.main;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.javaworld.w2j.logging.AppLogger;
 import org.javaworld.w2j.model.Library;
 import org.javaworld.w2j.util.CommandLineRunner;
@@ -72,7 +75,12 @@ public class Generator {
 			throw new RuntimeException("not supported library");
 		}
 		
-		int result = CommandLineRunner.runCommand(generateClientCommand);
+		//set JAVA_HOME environment variable
+		String javaHome = javaBinPath.replace("\\bin", "");
+		Map<String, String> environmentVariables = new HashMap<>();
+		environmentVariables.put("JAVA_HOME", javaHome);
+		
+		int result = CommandLineRunner.runCommand(generateClientCommand, environmentVariables);
 		
 		if(result == 0) {
 			logger.info("client generated successfully \n");
